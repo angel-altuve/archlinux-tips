@@ -11,7 +11,7 @@ sudo reflector --verbose --latest 10 --protocol https --sort rate --save /etc/pa
 Update System
 
 ```bash
-sudo pacman -Syu ; yay -Syu; paru -Syu
+sudo pacman -Syu ; paru -Syu
 ```
 
 Clear program download cache
