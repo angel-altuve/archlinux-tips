@@ -134,7 +134,9 @@ sudo pacman -S lib32-libpulse
 
 5. **Instar lutris**
 
-`sudo pacman -S lutris`
+```bash
+sudo pacman -S lutris
+```
 
 ### Completely Uninstall wine
 
