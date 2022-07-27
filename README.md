@@ -123,7 +123,7 @@ sudo pacman -S lib32-mesa vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib3
 Alsa
 
 ```bash
-sudo pacman -S lib32-alsa- plugins
+sudo pacman -S lib32-alsa-plugins
 ```
 
 Pulse
