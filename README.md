@@ -354,6 +354,6 @@ sudo sudo pacman -S ffmpeg aom libde265 x265 x264 libmpeg2 xvidcore libtheora li
 
 ## support for compressed files
 ```bash
-sudo pacman -S ark xarchiver unarchiver binutils gzip lha lrzip lzip lz4 p7zip tar xz bzip2 p7zip lbzip2 arj lzop cpio unrar unzip zstd zip lzip unarj zstd
+sudo pacman -S xarchiver unarchiver binutils gzip lha lrzip lzip lz4 p7zip tar xz bzip2 p7zip lbzip2 arj lzop cpio unrar unzip zstd zip lzip unarj zstd
 ```
 
