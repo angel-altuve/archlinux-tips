@@ -1,551 +1,353 @@
-# Tips de archlinux
+# Archlinux tips
 
-### **Mantenimiento y Limpieza en Arch Linux**
+### **Maintenance and Cleaning in Arch Linux**
 
-Actualizar lista de MirrorList
+update mirrorlist
 
-`sudo reflector --verbose --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist`
+```bash
+sudo reflector --verbose --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+```
 
-Actualizar Sistema
+Update System
 
-`sudo pacman -Syu ; yay -Syu; paru -Syu`
+```bash
+sudo pacman -Syu ; yay -Syu; paru -Syu
+```
 
-Eliminar cache de descargas de programas
+Clear program download cache
 
-`du -sh /var/cache/pacman/pkg/`
+```bash
+du -sh /var/cache/pacman/pkg/
+```
 
-`du -sh ~/.cache/yay`
+```bash
+du -sh ~/.cache/paru
+```
 
-`sudo pacman -Scc`
+```bash
+sudo pacman -Scc
+```
 
-`yay -Scc`
+```bash
+paru -Scc
+```
 
-`paru -Scc`
+Remove orphaned packages
 
-Eliminar paquetes huerfanos
+```bash
+sudo pacman -Rns $(pacman -Qdtq)
+```
 
-`sudo pacman -Rns $(pacman -Qdtq)`
+clear cache
 
-Eliminar cache
+```bash
+du -sh .cache
+```
 
-`du -sh .cache`
+```bash
+rm -rf .cache/*
+```
 
-`rm -rf .cache/*`
+Delete configurations (be careful)
 
-Eliminar configuraciones (cuidado)
+```bash
+du -sh .config
+```
 
-`du -sh .config`
+Be careful with this, it can permanently erase your settings.
 
-Cuidado con esto puede borrar de manera definitiva sus configuraciones
+```bash
+rm -rf .config/<file-name>
+``` 
 
-`rm -rf .config/nombre_del_archivo` 
+Check systemD services
 
-Revisar servicios de systemD
+```bash
+systemctl --failed
+```
 
-`systemctl --failed`
+```bash
+sudo journalctl -p 3 -xb
+```
 
-`sudo journalctl -p 3 -xb`
+Delete journal record
 
-Eliminar registro de journal
+```bash
+du -sh /var/log/journal
+```
 
-`du -sh /var/log/journal`
+```bash
+rm -rf /var/log/journal/*
+```
 
-`rm -rf /var/log/journal/*`
+### **Prevent pacman from installing programs even if it's already up to date**
 
-Activar las Descargas paralelas en Arch Linux - Pacman V.6.0.1
+```bash
+sudo pacman -Syu --needed
+```
 
-Ejecutamos el editor de texto como administrador:
-
-`sudo nano -l /etc/pacman.conf`
-
-Dentro de [options] debemos agregar:
-
-`ParallelDownloads = 5`
-
-5 es el número de descargas
-
-Podemos agregar otras modificaciones dentro de pacman.conf
-
-### **Personalizando PACMAN**
-
-Descomenta lo siguiente en el archivo /etc/pacman.conf
-
-`Color`
-
-`VerbosePkgLists`
-
-`ILoveCandy →`  la I, L, C en mayusculas.
-
-### **Sincronizar hora en Arch Linux**
-
-`sudo pacman -Sy ntp --noconfirm`
-
-`sudo systemctl enable --now ntpd`
-
-`sudo timedatectl set-timezone $(curl https://ipapi.co/timezone)`
-
-`sudo ntpd -qg`
-
-`sudo hwclock --systohc`
-
-### **Instalar Arch Linux en BIOS LEGACY en 25 pasos**
-
-1.Ponemos el teclado en español, puede ser también:  es / la-latin1
-
-`loadkeys es`
-
-2.Revisamos que nuestro disco esté en MBR / Dos y cual es la ruta
-
-`fdisk -l`
-
-3.Creamos la tabla de partición en nuestro caso es /dev/vda esto borrará todo el contenido del disco:
-
-4.Formateamos el disco
-
-`mkfs.ext4 /dev/sda1`
-
-5.Montamos el disco
-
-`mount /dev/sda1 /mnt`
-
-6.Instalamos los programas necesarios para el sistema
-
-`pacstrap  /mnt  base  base-devel  nano  dhcpcd  netctl  iwd  net-tools  networkmanager  ifplugd  reflector  grub  os-prober  mkinitcpio  linux  linux-headers  linux-firmware`
-
-7.Generamos el archivo FSTAB
-
-`genfstab -p /mnt >> /mnt/etc/fstab`
-
-8.Entramos al sistema
-
-`arch-chroot /mnt`
-
-9.Definimos idioma y localización
-
-Aquí es donde usamos la abreviatura de nuestro país en mi caso es Venezuela = Ve
-
-`echo es_VE.UTF-8 UTF-8 > /etc/locale.gen`
-
-10.Establecemos localización
-
-`locale-gen`
-
-11.Establecemos idioma
-
-`echo LANG=es_VE.UTF-8 > /etc/locale.conf`
-
-12.Exportamos la variable para idioma
-
-`export LANG=es_VE.UTF-8`
-
-13.Definimos la entrada de teclado, puede ser también:  es / la-latin1
-
-`echo KEYMAP=es > /etc/vconsole.conf`
-
-14.Este comando asume que el reloj de hardware está configurado en UTC
-
-`hwclock -w`
-
-15.Establecemos la zona horaria
-
-`ln -sf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone)  /etc/localtime`
-
-16.Establecemos nombre de nuestro Equipo
-
-`echo nombre_de_pc > /etc/hostname`
-
-17.Ponemos nuestra clave para el Administrador
-
-`passwd root`
-
-18.Creamos nuestro usuario
-
-`useradd -m -g users -s /bin/bash nombre_de_usuario`
-
-19.Para que nuestro usuario esté en la lista de SUDOERS y tenga permisos al ejecutar SUDO
-
-`sed -i "80i nombre_de_usuario ALL=(ALL) ALL"  /etc/sudoers`
-
-20.Ponemos nuestra clave para nuestro Usuario
-
-`passwd nombre_de_usuario`
-
-21.Activamos servicios respete mayus y minus
-
-`systemctl enable dhcpcd NetworkManager`
-
-22.Generamos una lista de Mirrors con la mejor velocidad
-
-`reflector --verbose --latest 15 --sort rate --save /etc/pacman.d/mirrorlist`
-
-21.Instalamos GRUB
-
-`grub-install /dev/sda`
-
-22.Generamos GRUB
-
-`grub-mkconfig -o /boot/grub/grub.cfg`
-
-23.Salimos
-
-`exit`
-
-24.Desmontamos los discos montados de /mnt
-
-`umount -R /mnt`
-
-25.Reiniciamos e iniciamos como root y con la clave root
-
-`reboot`
-
-DESCANSA Y PROTEGE TU VISTA CON REDSHIFT
-
-Instalación:
-
-`sudo pacman -S redshift`
-
-Ejecución:
-
-`redshift`
-
-Ver más parámetros y opciones que permite el programa en terminal:
-
-`redshift -h`
-
-Para saber que Shell estamos usando actualmente ejecutamos:
-
-`echo $SHELL`
-
-O también:
-
-`echo $0`
-
-Para instalar diferentes Shell
-
-bash (Bourne-again Shell):
-
-`sudo pacman -S bash bash-completion autojump command-not-found`
-
-zsh (Z-Shell):
-
-`sudo pacman -S zsh zsh-completions zsh-syntax-highlighting`
-
-fish (friendly interactive shell):
-
-`sudo pacman -S fish pkgfile`
-
-dash (Debian Almquist shell):
-
-`sudo pacman -S dash checkbashisms`
-
-mksh (KornShell):
-
-`sudo pacman -S  mksh`
-
-tcsh (C shell):
-
-`sudo pacman -S tcsh`
-
-Una vez instalado para ver una vista previa ejecutamos:
-
-`exec zsh`
-
-Para definir la SHELL predeterminada ejecutamos:
-
-`sudo chsh -s /bin/zsh nombre_de_usuario`
-
-### **Evitar que pacman instale programas incluso si ya está actualizado**
-
-`sudo pacman -Syu --needed`
-
-`sudo pacman -S paquetes --needed`
+```bash
+sudo pacman -S packages --needed
+```
 
 ### Wine
 
-1. Agregar soporte multilib
+1. Add multilib support
 
-Entrar a /etc/pacman.conf
+Get into /etc/pacman.conf
 
-Descomentar la siguiente línea
+Uncomment the following line
 
-`[multilib]`
+```bash[multilib]
+   Include = /etc/pacman.d/mirrorlist
+```
 
-`Include = /etc/pacman.d/mirrorlist`
+2. **Install wine**
 
-2. Instalar wine
+```bash
+pacman -S wine wine-gecko  wine-mono lib32-libldap
+```
 
-`pacman -S wine wine-gecko  wine-mono lib32-libldap`
+**Intel**
 
-Intel
+```bash
+sudo pacman -S lib32-mesa vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
+```
 
-`sudo pacman -S lib32-mesa vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader`
-
-4. Instalar soporte para audio
+4. **Install audio support**
 
 Alsa
 
-`sudo pacman -S lib32-alsa- plugins`
+```bash
+sudo pacman -S lib32-alsa- plugins
+```
 
 Pulse
 
-`sudo pacman -S lib32-libpulse`
+```bash
+sudo pacman -S lib32-libpulse
+```
 
-5. Instar lutris
+5. **Instar lutris**
 
 `sudo pacman -S lutris`
 
-### Desintalar Completamente wine
+### Completely Uninstall wine
 
-1. Abrir una terminar y teclear (o copiar y pegar):
+1. Open a finish and copy and paste:
 
-`sudo pacman -Rs wine wine wine-mono lib32-libldap`
+```bash
+sudo pacman -Rs wine wine wine-mono lib32-libldap
+rm -rf $HOME/.wine
+rm -f $HOME/.config/menus/applications-merged/wine*
+rm -rf $HOME/.local/share/applications/wine
+rm -f $HOME/.local/share/desktop-directories/wine*
+rm -f $HOME/.local/share/icons/????_*.xpm
+```
 
-2. `rm -rf $HOME/.wine`
+### Schedule an automatic shutdown in Linux
 
-3. `rm -f $HOME/.config/menus/applications-merged/wine*`
+An automatic shutdown can be programmed in different ways.
 
-4. `rm -rf $HOME/.local/share/applications/wine`
+For example, if you want to perform automatic shutdown at 16:30 , you can use the command as follows:
 
-5. `rm -f $HOME/.local/share/desktop-directories/wine*`
+```bash
+sudo shutdown 16:30
+```
 
-6. `rm -f $HOME/.local/share/icons/????_*.xpm`
+To schedule a shutdown within 30 minutes, you can perform the shutdown using the following command:
 
-### Instalación de Samba.
+```bash
+sudo shutdown +30
+```
 
-Instalamos samba:
+Cancel a scheduled shutdown
 
-`sudo pacman -S samba`
+Luckily this has an easy solution, you just have to use the -c option
 
-Creamos un archivo vacío para la configuración:
-
-`sudo touch /etc/samba/smb.conf`
-
-Luego copiamos el contenido de la configuración de ejemplo en el archivo que acabamos de crear.
-
-Configuración de ejemplo:
-
-https://git.samba.org/samba.git/?p=samba.git;a=blob_plain;f=examples/smb.conf.default;hb=HEAD
-
-Al archivo de configuración de samba le cambiamos donde dice:
-
-log file = /usr/local/samba/var/log.%m
-
-Lo cambiamos por:
-
-log file = /var/log/samba/%m.log
-
-Para probar si el archivo de configuración está bien, ocupamos:
-
-testparm /etc/samba/smb.conf
-
-Creamos el usuario para ingresar:
-
-`sudo smbpasswd -a tu_usuario`
-
-Habilitamos los servicios:
-
-`sudo systemctl enable smb.service`
-
-`sudo systemctl enable nmb.service`
-
-Nos desloguear y volvemos a entrar.
-
-Esto fue testeado en un celular con la app MiXplorer, pero se puede ocupar cualquier cliente Samba.
-
-### Programar un apagado automático en Linux
-
-Un apagado automático se puede programar de diferentes formas.
-
-Por ejemplo si quieres realizar el apagado automático a las 16:30 PM, puedes utilizar el comando de la siguiente manera:
-
-`sudo shutdown 16:30`
-
-Para programar un apagado dentro de 30 minutos, puedes realizar el apagado utilizando el siguiente comando:
-
-`sudo shutdown +30`
-
-Cancelar un apagado programado
-
-Por suerte esto tiene una fácil solución, sólo tienes que usar la opción -c
-
-`sudo shutdown -c`
+```bash
+sudo shutdown -c
+```
 
 ### Pacman
 
-Sincroniza la base de datos con los repositorios.
+Synchronize the database with the repositories.
 
-`pacman -Sy`
+```bash
+pacman -Sy
+```
 
-Actualiza el sistema completo.
+Update the entire system.
 
-`pacman -Syu`
+```bash
+pacman -Syu
+```
 
-Instala un paquete.
+Install a package.
 
-`pacman -S Paquete`
+```bash
+pacman -S package
+```
 
-Desinstala un paquete.
+Uninstall a package.
 
-`pacman -R paquete`
+```bash
+pacman -R package
+```
 
-Desinstala un paquete junto a las dependencias no utilizadas por otros paquetes.
+Uninstalls a package along with dependencies not used by other packages.
 
-`pacman -Rs paquete`
+```bash
+pacman -Rs package
+```
 
-Permite buscar a un paquete específico
+Allows you to search for a specific package
 
-`pacman -Ss Paquete`
+```bash
+pacman -Ss package
+```
 
-Descarga el paquete pero no lo instala
+Download the package but don't install it
 
-`pacman -Sw paquete`
+```bash
+pacman -Sw package
+```
 
-Muestra información sobre un paquete no instalado
+Show information about a package not installed
 
-`pacman -Si paquete`
+```bash
+pacman -Si package
+```
 
-Muestra información sobre un paquete ya instalado
+Show information about a package already installed
 
-`pacman -Qi paquete`
+```bash
+pacman -Qi package
+```
 
-Instala solamente las dependencias del paquete.
+Install only package dependencies.
 
-`pacman -Se paquete`
+```bash
+pacman -Se package
+```
 
-Muestra todos los archivos pertenecientes al paquete.
+Shows all the files belonging to the package.
 
-`pacman -Ql paquete`
+```bash
+pacman -Ql package
+```
 
-Muestra los paquetes del sistema que pueden ser actualizados, pero no los instala.
+Shows the system packages that can be updated, but does not install them.
 
-`pacman -Qu`
+```bash
+pacman -Qu
+```
 
-Muestra una lista de todos los paquetes instalados en el sistema.
+Shows a list of all packages installed on the system.
 
-`pacman -Q`
+```bash
+pacman -Q
+```
 
-Muestra a cuál paquete pertenece un archivo en especial.
+Shows which package a particular file belongs to.
 
-`pacman -Qo /ruta/del/archivo`
+```bash
+pacman -Qo /ruta/del/archivo
+```
 
-Borra todos los paquetes antiguos guardados en la caché de Pacman.
+Delete all old packages stored in the Pacman cache.
 
-`pacman -Sc`
+```bash
+pacman -Sc
+```
 
-Borra todos los paquetes guardados en la caché de pacman ubicado en /var/cache/pacman/pkg.
+Delete all packages stored in the pacman cache located in /var/cache/pacman/pkg.
 
-`pacman -Scc`
+```bash
+pacman -Scc
+```
 
-Instala un paquete guardado en una carpeta local.
+Install a package saved to a local folder.
 
-`pacman -U`
+```bash
+pacman -U
+```
 
-### INTEL (Soporta Vulkan gaming):
+### INTEL (Supports Vulkan gaming):
 
-/*Gráficos integrados al procesador
+**Graphics integrated to the processor**
 
-`pacman -S mesa lib32-mesa`
+```bash
+sudo pacman -S mesa lib32-mesa
+```
 
-`pacman -S xf86-video-intel vulkan-intel`
+**classic OpenGL (non-Gallium3D) drivers**
 
->>> Aceleración por Hardware <<<
+```bash
+sudo pacman -S mesa-amber lib32-mesa-amber 
+```
 
-La aceleración de vídeo por hardware hace posible que la tarjeta de vídeo
+```bash
+sudo pacman -S xf86-video-intel vulkan-intel
+```
 
-decodifique y codifique vídeo usando la GPU (gráfica)
+>>> Hardware Acceleration <<<
 
-Descargando así la CPU (procesador) y ahorrando energía
+Hardware video acceleration makes it possible for your video card to
 
-`pacman -S intel-media-driver libva-intel-driver`
+decode and encode video using the GPU (graphics)
 
-`pacman -S libva-vdpau-driver libvdpau-va-gl`
+Thus unloading the CPU (processor) and saving power
 
-`pacman -S libva-utils vdpauinfo`
+```bash
+sudo pacman -S intel-media-driver libva-intel-driver
+```
+
+```bash
+sudo pacman -S libva-vdpau-driver libvdpau-va-gl
+```
+
+```bash
+sudo pacman -S libva-utils vdpauinfo
+```
 
 >>> GPGPU <<<
 
-/*Trata de aprovechar las capacidades de cómputo de una GPU.
+/*Try to take advantage of the computing capabilities of a GPU.
 
-/*Descargando así la CPU y ahorrando energía.
+/* Thus unloading the CPU and saving energy.
 
-/*En Linux, actualmente hay dos marcos principales de GPGPU: OpenCL y CUDA
+/*On Linux, there are currently two main GPGPU frameworks: OpenCL and CUDA
 
-/*Se usa mucho en edición de vídeo, diseño gráfico, etc...
+/*It is widely used in video editing, graphic design, etc...
 
-/*OpenCL funciona con cualquier programa o Juego,
+/*OpenCL works with any program or Game,
 
-/*hasta en Wine para trabajar con la GPU su uso es:
+/* even in Wine to work with the GPU its use is:
 
-`wine /ruta/a/juego_3d.exe -opengl`
+```bash
+wine /ruta/a/juego_3d.exe -opengl
+```
 
-Instalación:
+Installation:
 
-`pacman -S intel-compute-runtime beignet`
+```bash
+pacman -S intel-compute-runtime beignet
+```
 
-`pacman -S clinfo ocl-icd opencl-headers`
+```bash
+pacman -S clinfo ocl-icd opencl-headers
+```
 
-### Códecs de vídeo
+##  Video codecs
 
-`sudo pacman -S ffmpeg aom libde265 x265 x264 libmpeg2 xvidcore libtheora libvpx schroedinger sdl gstreamer gst-plugins-bad gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly xine-lib libdvdcss libdvdread dvd+rw-tools lame`
+```bash
+sudo sudo pacman -S ffmpeg aom libde265 x265 x264 libmpeg2 xvidcore libtheora libvpx schroedinger sdl gstreamer gst-plugins-bad gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly xine-lib libdvdcss libdvdread dvd+rw-tools lame
+```
 
-Con ese comando vemos todos los códecs de vídeo21 disponibles
 
-ffmpeg -formats -E
+## support for compressed files
+```bash
+sudo pacman -S ark xarchiver unarchiver binutils gzip lha lrzip lzip lz4 p7zip tar xz bzip2 p7zip lbzip2 arj lzop cpio unrar unzip zstd zip lzip unarj zstd
+```
 
-Compresión y Descompresión
-
-- ark: Interfaz Gráfica de KDE
-- xarchiver: Interfaz Gráfica en GTK+
-
-`sudo pacman -S ark xarchiver unarchiver binutils gzip lha lrzip lzip lz4 p7zip tar xz bzip2 p7zip lbzip2 arj lzop cpio unrar unzip zstd zip lzip unarj zstd`
-
-### Lectura de cualquier formato de Discos
-
-(Mac-windows-android-discos 3.0,etc)
-
-Esto nos permite tener lectura y escritura en algunos casos de varios formatos de discos
-
-`sudo pacman -S android-file-transfer android-tools android-udev msmtp libmtp libcddb gvfs gvfs-afc gvfs-smb gvfs-gphoto2 gvfs-mtp gvfs-goa gvfs-nfs gvfs-google dosfstools jfsutils f2fs-tools btrfs-progs exfat-utils ntfs-3g reiserfsprogs udftools xfsprogs nilfs-utils polkit gpart mtools`
-
-Instalación de Kernel Linux
-
-Para Linux Estable:
-
-La versión vanilla del kernel y los módulos, con pocas modificaciones aplicadas.
-
-`sudo pacman -S linux-firmware mkinitcpio linux linux-headers`
-
-Para Linux Hardened:
-
-Un kernel de Linux enfocado en seguridad, aplica parches para mitigar la explotación en el kernel o en el espacio del usuario. También activa más características de seguridad en comparación con linux, entre otros: namespaces, audit y SELinux.
-
-`sudo pacman -S linux-firmware mkinitcpio linux-hardened linux-hardened-headers`
-
-Para Linux LTS:
-
-Kernel de Linux y módulos con soporte de larga duración (LTS).
-
-`sudo pacman -S linux-firmware mkinitcpio linux-lts linux-lts-headers`
-
-Para Linux Zen:
-
-Es el resultado de un esfuerzo colaborativo de varios hackers para hacer el mejor kernel para el uso en sistemas de uso diario, el mejor en múltiples procesos.
-
-`sudo pacman -S linux-firmware mkinitcpio linux-zen linux-zen-headers`
-
-Después de la instalación del Kernel es necesario volver a generar grub para que reconozca las nuevas  *IMG del kernel instalado:
-
-`grub-mkconfig -o /boot/grub/grub.cfg`
-
-Si usa otro gestor de arranque consulte la documentación.
-
-Información hardware.
-
-`lspci -vv`
-
-(se pueden filtrar datos con el comando grep)
-
-`Ejemplo: lspci -vv | grep VGA`
-
-- v = Verbose
-- vv = Very Verbose
