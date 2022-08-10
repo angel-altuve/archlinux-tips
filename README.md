@@ -4,10 +4,10 @@
 - Table of Contents
     
     - [Maintenance and Cleaning in Arch Linux](#maintenance-and-cleaning-in-arch-linux)
-    - [Prevent pacman from installing programs even if it's already up to date](#prevent-pacman-from-installing-programs-even-if-it's already-up-to-date) 
-    - [Installation dependencies](#Installation-dependencies)
-    - [Installation dotfiles](#Installation-dotfiles) 
-    - [License](#License)
+    - [Wine](#wine)
+    - [Schedule an automatic shutdown in Linux](#schedule-an-automatic-shutdown-in-linux) 
+    - [Pacman](#pacman)
+    - [Video drivers](#video-drivers)
  
 
 
@@ -93,16 +93,6 @@ du -sh /var/log/journal
 
 ```bash
 rm -rf /var/log/journal/*
-```
-
-### **Prevent pacman from installing programs even if it's already up to date**
-
-```bash
-sudo pacman -Syu --needed
-```
-
-```bash
-sudo pacman -S packages --needed
 ```
 
 ### Wine
@@ -290,7 +280,18 @@ Install a package saved to a local folder.
 pacman -U
 ```
 
-### INTEL (Supports Vulkan gaming):
+Prevent pacman from installing programs even if it's already up to date
+
+```bash
+sudo pacman -Syu --needed
+```
+
+```bash
+sudo pacman -S packages --needed
+```
+
+## Video drivers
+**INTEL (Supports Vulkan gaming):**
 
 **Graphics integrated to the processor**
 
