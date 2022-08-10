@@ -4,7 +4,7 @@
 - Table of Contents
     
     - [Maintenance and Cleaning in Arch Linux](#maintenance-and-cleaning-in-arch-linux)
-    - [Prevent pacman from installing programs even if it's already up to date](#Prevent-pacman-from-installing-programs-even-if-it's already-up-to-date) 
+    - [Prevent pacman from installing programs even if it's already up to date](#prevent-pacman-from-installing-programs-even-if-it's already-up-to-date) 
     - [Installation dependencies](#Installation-dependencies)
     - [Installation dotfiles](#Installation-dotfiles) 
     - [License](#License)
