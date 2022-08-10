@@ -12,7 +12,7 @@
     - [Support for compressed files](#support-for-compressed-files)
 
 
-### **Maintenance and Cleaning in Arch Linux**
+## Maintenance and Cleaning in Arch Linux
 
 update mirrorlist
 
@@ -96,7 +96,7 @@ du -sh /var/log/journal
 rm -rf /var/log/journal/*
 ```
 
-### Wine
+## Wine
 
 1. Add multilib support
 
@@ -140,7 +140,7 @@ sudo pacman -S lib32-libpulse
 sudo pacman -S lutris
 ```
 
-### Completely Uninstall wine
+## Completely Uninstall wine
 
 1. Open a finish and copy and paste:
 
@@ -153,7 +153,7 @@ rm -f $HOME/.local/share/desktop-directories/wine*
 rm -f $HOME/.local/share/icons/????_*.xpm
 ```
 
-### Schedule an automatic shutdown in Linux
+## Schedule an automatic shutdown in Linux
 
 An automatic shutdown can be programmed in different ways.
 
@@ -177,7 +177,7 @@ Luckily this has an easy solution, you just have to use the -c option
 sudo shutdown -c
 ```
 
-### Pacman
+## Pacman
 
 Synchronize the database with the repositories.
 
@@ -365,7 +365,7 @@ sudo sudo pacman -S ffmpeg aom libde265 x265 x264 libmpeg2 xvidcore libtheora li
 ```
 
 
-## support for compressed files
+## Support for compressed files
 ```bash
 sudo pacman -S xarchiver unarchiver binutils gzip lha lrzip lzip lz4 p7zip tar xz bzip2 p7zip lbzip2 arj lzop cpio unrar unzip zstd zip lzip unarj zstd
 ```
