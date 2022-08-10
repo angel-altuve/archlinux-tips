@@ -8,7 +8,8 @@
     - [Schedule an automatic shutdown in Linux](#schedule-an-automatic-shutdown-in-linux) 
     - [Pacman](#pacman)
     - [Video drivers](#video-drivers)
- 
+    - [Video codecs](#video-codecs)
+    - [Support for compressed files](#support-for-compressed-files)
 
 
 ### **Maintenance and Cleaning in Arch Linux**
